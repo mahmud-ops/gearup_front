@@ -41,6 +41,7 @@ const GearPage = async () => {
       {gears.map((g) => (
         <GearCard
           key={g.id}
+          id={g.id}
           image={g.image}
           name={g.name}
           availableQuantity={g.availableQuantity}

@@ -1,9 +1,17 @@
-import React from 'react'
+type Props = {
+  params: Promise<{
+    id: string;
+  }>;
+};
 
-const page = () => {
+const GearDetailsPage = async ({ params }: Props) => {
+  const { id } = await params;
+
   return (
-    <div>page</div>
-  )
-}
+    <>
+        
+    </>
+  );
+};
 
-export default page
+export default GearDetailsPage;

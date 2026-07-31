@@ -7,8 +7,10 @@ import {
 } from "../ui/card";
 import Image from "next/image";
 import { Button } from "../ui/button";
+import Link from "next/link";
 
 export type GearCardProps = {
+  id: string;
   name: string;
   category: string;
   image?: string;
@@ -17,6 +19,7 @@ export type GearCardProps = {
 };
 
 const GearCard = ({
+  id,
   name,
   category,
   image,
@@ -58,7 +61,9 @@ const GearCard = ({
         </CardContent>
 
         <CardFooter className="p-4 pt-0">
-          <Button className="w-full rounded-xl">Rent Now</Button>
+          <Link href={`/gear/${id}`} className="w-full">
+            <Button className="w-full rounded-xl">Rent Now</Button>
+          </Link>
         </CardFooter>
       </Card>
     </>
