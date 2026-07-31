@@ -1,9 +1,9 @@
-import { Button } from "@/components/ui/button";
+import HeroSection from "@/components/shared/HeroSection";
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen items-center justify-center">
-      <Button>GearUp</Button>
+    <main>
+      <HeroSection />
     </main>
   );
 }
