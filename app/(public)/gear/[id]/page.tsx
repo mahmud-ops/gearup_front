@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import Link from "next/link";
 
 export interface Category {
   id: string;
@@ -89,9 +90,11 @@ const GearDetailsPage = async ({ params }: Props) => {
           </div>
 
           <div className="pt-4">
+            <Link href={`/checkout/${id}`}>
             <Button className="w-full sm:w-auto px-8 py-2 font-semibold">
               Rent Now
             </Button>
+            </Link>
           </div>
         </div>
       </div>
