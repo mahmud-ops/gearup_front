@@ -1,6 +1,6 @@
 import GearCard, { type GearCardProps } from "@/components/shared/GearCard";
 
-interface GearItem {
+export interface GearItem {
   id: string;
   name: string;
   description?: string;
@@ -19,7 +19,7 @@ interface GearResponse {
   data: GearItem[];
 }
 
-const getGear = async (): Promise<GearItem[]> => {
+const getGears = async (): Promise<GearItem[]> => {
   const response = await fetch(
     "https://gearup-backend-api.onrender.com/api/gear_items",
   );
@@ -34,7 +34,7 @@ const getGear = async (): Promise<GearItem[]> => {
 };
 
 const GearPage = async () => {
-  const gears = await getGear();
+  const gears = await getGears();
 
   return (
     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 m-2">
