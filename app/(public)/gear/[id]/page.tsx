@@ -59,7 +59,7 @@ const GearDetailsPage = async ({ params }: Props) => {
           </div>
 
           <div className="pt-4">
-            <Link href={`/checkout/${id}`}>
+            <Link href={`/checkout/${gear.id}`}>
             <Button className="w-full sm:w-auto px-8 py-2 font-semibold">
               Rent Now
             </Button>

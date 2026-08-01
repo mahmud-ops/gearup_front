@@ -3,15 +3,18 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { getGear } from "@/services/gear";
+import { GearItem } from "@/types/gear.types";
 
 type Props = {
-  params: {
+  params: Promise<{
     gearId: string;
-  };
+  }>;
 };
 
-const GearCheckoutPage = ({ params }: Props) => {
-  const { gearId } = params;
+const GearCheckoutPage = async ({ params }: Props) => {
+  const { gearId } = await params;
+  const gear: GearItem = await getGear(gearId);
 
   return (
     <div className="max-w-md mx-auto my-8">
@@ -24,11 +27,11 @@ const GearCheckoutPage = ({ params }: Props) => {
           <div className="p-4 bg-muted/50 rounded-lg border text-sm space-y-1">
             <p className="text-muted-foreground">
               <span className="font-semibold text-foreground">Gear:</span>{" "}
-              Mountain Bike
+              {gear.name}
             </p>
             <p className="text-muted-foreground">
               <span className="font-semibold text-foreground">Price:</span>{" "}
-              $35/day
+              {`${gear.dailyRate} tk/day`}
             </p>
           </div>
 

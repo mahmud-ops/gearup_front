@@ -1,4 +1,4 @@
-import { GearItem } from "@/types/gear.types";
+import { GearItem, GearResponse } from "@/types/gear.types";
 
 export const getGears = async (): Promise<GearItem[]> => {
   const response = await fetch(
