@@ -26,6 +26,8 @@ const GearCard = ({
   dailyRate,
   availableQuantity,
 }: GearCardProps) => {
+
+
   return (
     <>
       <Card className="overflow-hidden rounded-xl">
@@ -62,7 +64,7 @@ const GearCard = ({
 
         <CardFooter className="p-4 pt-0">
           <Link href={`/gear/${id}`} className="w-full">
-            <Button className="w-full rounded-xl">Rent Now</Button>
+            <Button className="w-full rounded-xl">View Details</Button>
           </Link>
         </CardFooter>
       </Card>

@@ -2,29 +2,9 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
+import { getGear } from "@/services/gear";
 
-export interface Category {
-  id: string;
-  name: string;
-  slug: string;
-  description: string;
-  createdAt: string;
-  updatedAt: string;
-}
 
-export interface GearItem {
-  id: string;
-  name: string;
-  description: string;
-  dailyRate: string;
-  availableQuantity: number;
-  image: string;
-  providerId: string;
-  categoryId: string;
-  createdAt: string;
-  updatedAt: string;
-  category: Category;
-}
 
 type Props = {
   params: Promise<{
@@ -32,18 +12,7 @@ type Props = {
   }>;
 };
 
-const getGear = async (id: string): Promise<GearItem> => {
-  const response = await fetch(
-    `https://gearup-backend-api.onrender.com/api/gear_items/${id}`,
-  );
 
-  if (!response.ok) {
-    throw new Error(`HTTP ${response.status}`);
-  }
-
-  const result = await response.json();
-  return result.data;
-};
 
 const GearDetailsPage = async ({ params }: Props) => {
   const { id } = await params;

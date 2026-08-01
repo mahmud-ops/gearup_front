@@ -1,37 +1,5 @@
 import GearCard, { type GearCardProps } from "@/components/shared/GearCard";
-
-export interface GearItem {
-  id: string;
-  name: string;
-  description?: string;
-  dailyRate: string;
-  availableQuantity: number;
-  image: string;
-  category: {
-    name: string;
-  };
-}
-
-interface GearResponse {
-  success: boolean;
-  statusCode: number;
-  message: string;
-  data: GearItem[];
-}
-
-const getGears = async (): Promise<GearItem[]> => {
-  const response = await fetch(
-    "https://gearup-backend-api.onrender.com/api/gear_items",
-  );
-
-  if (!response.ok) {
-    throw new Error(`HTTP ${response.status}`);
-  }
-
-  const result: GearResponse = await response.json();
-
-  return result.data;
-};
+import { getGears } from "@/services/gear";
 
 const GearPage = async () => {
   const gears = await getGears();
