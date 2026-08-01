@@ -12,8 +12,11 @@ export const CheckoutForm = ({ gear }: { gear: GearItem }) => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
 
+  const today = new Date().toISOString().split("T")[0];
+
   const totalDays = calculateDays(startDate, endDate);
   const estimatedCost = calculatePrice(Number(gear.dailyRate), totalDays);
+  const isValid = totalDays > 0;
 
   return (
     <Card>
@@ -37,8 +40,8 @@ export const CheckoutForm = ({ gear }: { gear: GearItem }) => {
             <Label htmlFor="startDate">Rental Start Date</Label>
             <Input
               type="date"
-              id="startDate"
               value={startDate}
+              min={today}
               onChange={(e) => setStartDate(e.target.value)}
             />
           </div>
@@ -47,25 +50,31 @@ export const CheckoutForm = ({ gear }: { gear: GearItem }) => {
             <Label htmlFor="endDate">Rental End Date</Label>
             <Input
               type="date"
-              id="endDate"
               value={endDate}
+              min={startDate || today}
               onChange={(e) => setEndDate(e.target.value)}
             />
           </div>
+          <p>
+            <span className="font-semibold">Available:</span>{" "}
+            {gear.availableQuantity}
+          </p>
         </div>
 
-        <div className="p-4 bg-muted/60 rounded-lg border text-sm space-y-1 select-none pointer-events-none opacity-60">
+        <div className="p-4 bg-muted/60 rounded-lg border text-sm space-y-1">
           <p className="text-muted-foreground">
             Total Days:{" "}
             <span className="font-bold text-foreground">{totalDays}</span>
           </p>
           <p className="text-muted-foreground">
             Estimated Cost:{" "}
-            <span className="font-bold text-foreground">{estimatedCost} tk</span>
+            <span className="font-bold text-foreground">
+              {estimatedCost} tk
+            </span>
           </p>
         </div>
 
-        <Button type="button" className="w-full rounded-lg">
+        <Button type="button" className="w-full rounded-lg" disabled={!isValid}>
           Confirm Rental
         </Button>
       </CardContent>
