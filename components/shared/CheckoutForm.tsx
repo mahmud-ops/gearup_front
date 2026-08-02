@@ -9,6 +9,7 @@ import { GearItem } from "@/types/gear.types";
 import { calculateDays, calculatePrice } from "@/services/gear.utils";
 import { createRental } from "@/services/rentals";
 import Cookies from "js-cookie";
+import { createCheckoutSession } from "@/services/payment";
 
 export const CheckoutForm = ({ gear }: { gear: GearItem }) => {
   const [startDate, setStartDate] = useState("");
@@ -43,8 +44,13 @@ export const CheckoutForm = ({ gear }: { gear: GearItem }) => {
 
     try {
       setLoading(true);
-      const result = await createRental(payload, token);
-      console.log(result);
+      const order = await createRental(payload, token);
+
+      const checkout = await createCheckoutSession(order.data.id, token);
+
+      window.location.href = checkout.data.paymentUrl;
+
+      console.log(order);
     } catch (error) {
       console.error("Rental creation failed:", error);
     } finally {
