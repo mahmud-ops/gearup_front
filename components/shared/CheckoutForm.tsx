@@ -7,16 +7,52 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { GearItem } from "@/types/gear.types";
 import { calculateDays, calculatePrice } from "@/services/gear.utils";
+import { createRental } from "@/services/rentals";
+import Cookies from "js-cookie";
 
 export const CheckoutForm = ({ gear }: { gear: GearItem }) => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const today = new Date().toISOString().split("T")[0];
 
   const totalDays = calculateDays(startDate, endDate);
   const estimatedCost = calculatePrice(Number(gear.dailyRate), totalDays);
   const isValid = totalDays > 0;
+
+  const handleConfirm = async () => {
+    const token = Cookies.get("accessToken");
+
+    if (!token) {
+      console.error("No access token found");
+      alert("Please login to complete your checkout.");
+      return;
+    }
+
+    const payload = {
+      startDate,
+      endDate,
+      items: [
+        {
+          gearItemId: gear.id,
+          quantity: 1,
+        },
+      ],
+    };
+
+    try {
+      setLoading(true);
+      const result = await createRental(payload, token);
+      console.log(result);
+    } catch (error) {
+      console.error("Rental creation failed:", error);
+    } finally {
+      setLoading(false);
+    }
+
+    console.log(payload);
+  };
 
   return (
     <Card>
@@ -74,7 +110,12 @@ export const CheckoutForm = ({ gear }: { gear: GearItem }) => {
           </p>
         </div>
 
-        <Button type="button" className="w-full rounded-lg" disabled={!isValid}>
+        <Button
+          onClick={handleConfirm}
+          type="button"
+          className="w-full rounded-lg"
+          disabled={!isValid}
+        >
           Confirm Rental
         </Button>
       </CardContent>
