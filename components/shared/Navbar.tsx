@@ -22,12 +22,12 @@ const Navbar = () => {
 
       {/* Auth Buttons */}
       <div className="flex items-center gap-3">
-        <Link href="/auth/login">
+        <Link href="/login">
           <Button variant="outline" className="rounded-md">
             Login
           </Button>
         </Link>
-        <Link href="/auth/register">
+        <Link href="/register">
           <Button className="rounded-md">
             Register
           </Button>
