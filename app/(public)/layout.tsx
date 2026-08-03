@@ -1,15 +1,17 @@
-import Footer from "@/components/shared/Footer";
 import Navbar from "@/components/shared/Navbar";
-import React from "react";
 
-const publicLayout = ({ children }: { children: React.ReactNode }) => {
+export default function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <>
+    <div className="h-screen flex flex-col">
       <Navbar />
-      <main>{children}</main>
-      <Footer />
-    </>
-  );
-};
 
-export default publicLayout;
+      <main className="flex-1 overflow-y-auto">
+        {children}
+      </main>
+    </div>
+  );
+}

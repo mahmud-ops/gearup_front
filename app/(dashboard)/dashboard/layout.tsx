@@ -1,9 +1,16 @@
-import React from 'react'
+import Navbar from "@/components/shared/Navbar";
 
-const DashboardLayout = () => {
+export default function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <div>DashboardLayout</div>
-  )
+    <>
+      <Navbar />
+      <main className="container mx-auto py-8">
+        {children}
+      </main>
+    </>
+  );
 }
-
-export default DashboardLayout
