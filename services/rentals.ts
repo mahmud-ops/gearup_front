@@ -1,3 +1,5 @@
+import { RentalOrdersResponse } from "@/types/rental.types";
+
 export const createRental = async (payload: unknown, token: string) => {
   const response = await fetch(
     "https://gearup-backend-api.onrender.com/api/rental_orders",
@@ -17,5 +19,30 @@ export const createRental = async (payload: unknown, token: string) => {
     throw new Error(result.message || "Failed to create rental");
   }
 
+  return result;
+};
+
+export const getRentalOrders = async (
+  token: string
+): Promise<RentalOrdersResponse> => {
+  const response = await fetch(
+    "https://gearup-backend-api.onrender.com/api/rental_orders/me",
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token,
+      },
+    }
+  );
+
+  if (!response.ok) {
+    if (response.status === 401) {
+      throw new Error("Unauthorized");
+    }
+    throw new Error(`HTTP ${response.status}`);
+  }
+
+  const result: RentalOrdersResponse = await response.json();
   return result;
 };
