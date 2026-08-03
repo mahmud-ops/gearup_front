@@ -1,3 +1,5 @@
+import Cookies from "js-cookie";
+
 export const login = async (email: string, password: string) => {
   const res = await fetch(
     "https://gearup-backend-api.onrender.com/api/auth/login",
@@ -7,7 +9,7 @@ export const login = async (email: string, password: string) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ email, password }),
-    }
+    },
   );
 
   const data = await res.json();
@@ -17,4 +19,9 @@ export const login = async (email: string, password: string) => {
   }
 
   return data;
+};
+
+export const logout = () => {
+  Cookies.remove("accessToken");
+  window.location.href = "/";
 };
