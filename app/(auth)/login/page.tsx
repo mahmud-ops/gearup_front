@@ -34,7 +34,6 @@ export default function LoginForm() {
         sameSite: "lax",
         secure: process.env.NODE_ENV === "production",
       });
-
       window.location.href = "/gear";
 
       console.log("Login successful:", result);
