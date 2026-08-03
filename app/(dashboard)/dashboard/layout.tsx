@@ -6,6 +6,7 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
+    // must inclde a sidebar later
     <>
       <Navbar />
       <main className="container mx-auto py-8">

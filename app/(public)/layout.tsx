@@ -8,10 +8,7 @@ export default function DashboardLayout({
   return (
     <div className="h-screen flex flex-col">
       <Navbar />
-
-      <main className="flex-1 overflow-y-auto">
-        {children}
-      </main>
+      <main className="flex-1 overflow-y-auto">{children}</main>
     </div>
   );
 }
