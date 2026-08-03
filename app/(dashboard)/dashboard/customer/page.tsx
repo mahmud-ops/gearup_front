@@ -7,6 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import {
   Table,
   TableBody,
@@ -16,8 +17,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { RentalOrder } from "@/types/rental.types";
-import { getRentalOrders } from "@/services/rentals";
+import { RentalOrder, PaymentStatus } from "@/types/rental.types";
+import { getRentalOrders, getPaymentStatuses } from "@/services/rentals";
+import { PayNowButton } from "@/components/shared/PayNowButton";
 
 const formatDate = (dateString: string) => {
   return new Date(dateString).toLocaleDateString("en-US", {
@@ -26,6 +28,20 @@ const formatDate = (dateString: string) => {
     day: "numeric",
   });
 };
+
+const getPaymentStatusVariant = (
+  status?: PaymentStatus
+): "default" | "secondary" | "destructive" | "outline" => {
+  if (!status) return "secondary";
+  const normalized = status.toLowerCase();
+  if (normalized === "completed") return "default";
+  if (normalized === "failed" || normalized === "cancelled") {
+    return "destructive";
+  }
+  return "secondary";
+};
+
+const isPaid = (status?: PaymentStatus) => status === "COMPLETED";
 
 const CustomerPage = async () => {
   const cookieStore = await cookies();
@@ -36,8 +52,21 @@ const CustomerPage = async () => {
 
   if (token) {
     try {
-      const result = await getRentalOrders(token);
-      orders = result.data;
+      const ordersResult = await getRentalOrders(token);
+      orders = ordersResult.data ?? [];
+
+      try {
+        const paymentsResult = await getPaymentStatuses(token);
+        const paymentMap = new Map(
+          paymentsResult.data.map((p) => [p.orderId, p])
+        );
+        orders = orders.map((order) => ({
+          ...order,
+          payment: paymentMap.get(order.id),
+        }));
+      } catch {
+        // payments unavailable; orders still render without payment info
+      }
     } catch (err) {
       const message =
         err instanceof Error ? err.message : "Failed to load orders";
@@ -170,11 +199,21 @@ const CustomerPage = async () => {
                   </Table>
                 </div>
 
-                <div className="mt-4 text-right">
-                  <p className="text-sm text-muted-foreground">
-                    Total Amount
-                  </p>
-                  <p className="text-2xl font-bold">${order.totalAmount}</p>
+                <div className="mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                  <div className="text-right sm:text-left">
+                    <p className="text-sm text-muted-foreground">
+                      Total Amount
+                    </p>
+                    <p className="text-2xl font-bold">${order.totalAmount}</p>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Badge variant={getPaymentStatusVariant(order.payment?.status)}>
+                      {order.payment?.status ?? "NO PAYMENT"}
+                    </Badge>
+                    {!isPaid(order.payment?.status) && (
+                      <PayNowButton orderId={order.id} />
+                    )}
+                  </div>
                 </div>
               </CardContent>
             </Card>

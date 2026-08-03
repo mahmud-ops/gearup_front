@@ -25,6 +25,7 @@ export interface RentalOrder {
   updatedAt: string;
   provider: Provider;
   rentalOrderItems: RentalOrderItem[];
+  payment?: Payment;
 }
 
 export interface RentalOrdersResponse {
@@ -32,4 +33,21 @@ export interface RentalOrdersResponse {
   statusCode: number;
   message: string;
   data: RentalOrder[];
+}
+
+export type PaymentStatus = "PENDING" | "COMPLETED" | "FAILED" | "CANCELLED";
+
+export interface Payment {
+  id: string;
+  orderId: string;
+  status: PaymentStatus;
+  amount: string;
+  createdAt: string;
+}
+
+export interface PaymentResponse {
+  success: boolean;
+  statusCode: number;
+  message: string;
+  data: Payment[];
 }

@@ -1,4 +1,4 @@
-import { RentalOrdersResponse } from "@/types/rental.types";
+import { RentalOrdersResponse, PaymentResponse } from "@/types/rental.types";
 
 export const createRental = async (payload: unknown, token: string) => {
   const response = await fetch(
@@ -44,5 +44,30 @@ export const getRentalOrders = async (
   }
 
   const result: RentalOrdersResponse = await response.json();
+  return result;
+};
+
+export const getPaymentStatuses = async (
+  token: string
+): Promise<PaymentResponse> => {
+  const response = await fetch(
+    "https://gearup-backend-api.onrender.com/api/payment/my-payments",
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token,
+      },
+    }
+  );
+
+  if (!response.ok) {
+    if (response.status === 401) {
+      throw new Error("Unauthorized");
+    }
+    throw new Error(`HTTP ${response.status}`);
+  }
+
+  const result: PaymentResponse = await response.json();
   return result;
 };
