@@ -3,19 +3,30 @@ import { Button } from "../ui/button";
 import Link from "next/link";
 import Cookies from "js-cookie";
 import { logout } from "@/services/auth";
+import { getCurrentUser } from "@/services/auth";
 import { useEffect, useState } from "react";
+import { CurrentUser } from "@/types/user.types";
 
 const Navbar = () => {
   const [mounted, setMounted] = useState(false);
+  const [user, setUser] = useState<CurrentUser | null>(null);
 
   useEffect(() => {
     setMounted(true);
+    (async () => {
+      try {
+        const currentUser = await getCurrentUser();
+        setUser(currentUser);
+      } catch (error) {
+        console.error("Failed to fetch user:", error);
+        setUser(null);
+      }
+    })();
   }, []);
 
   if (!mounted) {
     return null; // or render a placeholder
   }
-  const token = Cookies.get("accessToken");
 
   return (
     <nav className="flex items-center justify-between px-6 py-4 border-b">
@@ -30,13 +41,16 @@ const Navbar = () => {
 
       {/* Main Navigation Links */}
       <div className="flex items-center gap-6 text-sm font-medium">
-        <a href="/gear">Browse Gear</a>
-        <a href="/auth/register?role=provider">Become a Provider</a>
+        <Link href="/gear">Browse Gear</Link>
+        <Link href="/auth/register?role=provider">Become a Provider</Link>
+        {user && (
+          <Link href={`/dashboard/${user.role.toLowerCase()}`}>Dashboard</Link>
+        )}
       </div>
 
       {/* Auth Buttons */}
       <div className="flex items-center gap-3">
-        {token ? (
+        {user ? (
           <Button className="rounded-lg" onClick={logout}>
             Logout
           </Button>
