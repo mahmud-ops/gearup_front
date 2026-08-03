@@ -1,4 +1,5 @@
 import Navbar from "@/components/shared/Navbar";
+import { RoleGuard } from "./role-guard";
 
 export default function DashboardLayout({
   children,
@@ -6,11 +7,10 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    // must inclde a sidebar later
     <>
       <Navbar />
       <main className="container mx-auto py-8">
-        {children}
+        <RoleGuard>{children}</RoleGuard>
       </main>
     </>
   );
