@@ -1,12 +1,7 @@
 import { cookies } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
   Table,
@@ -18,28 +13,8 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { RentalOrder, PaymentStatus } from "@/types/rental.types";
-import { getRentalOrders, getPaymentStatuses } from "@/services/rentals";
+import { getRentalOrders, getPaymentStatuses, formatDate, getPaymentStatusVariant } from "@/services/rentals";
 import { PayNowButton } from "@/components/shared/PayNowButton";
-
-const formatDate = (dateString: string) => {
-  return new Date(dateString).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
-};
-
-const getPaymentStatusVariant = (
-  status?: PaymentStatus
-): "default" | "secondary" | "destructive" | "outline" => {
-  if (!status) return "secondary";
-  const normalized = status.toLowerCase();
-  if (normalized === "completed") return "default";
-  if (normalized === "failed" || normalized === "cancelled") {
-    return "destructive";
-  }
-  return "secondary";
-};
 
 const isPaid = (status?: PaymentStatus) => status === "COMPLETED";
 
@@ -58,20 +33,20 @@ const CustomerPage = async () => {
       try {
         const paymentsResult = await getPaymentStatuses(token);
         const paymentMap = new Map(
-          paymentsResult.data.map((p) => [p.orderId, p])
+          paymentsResult.data.map((p) => [p.orderId, p]),
         );
         orders = orders.map((order) => ({
           ...order,
           payment: paymentMap.get(order.id),
         }));
       } catch {
-        // payments unavailable; orders still render without payment info
+        // orders still render without payment info
       }
     } catch (err) {
       const message =
         err instanceof Error ? err.message : "Failed to load orders";
       if (message === "Unauthorized") {
-        error = "Your session has expired. Please log in again.";
+        window.location.href = "/login";
       } else {
         error = message;
       }
@@ -82,7 +57,7 @@ const CustomerPage = async () => {
 
   const totalSpent = orders.reduce(
     (sum, order) => sum + Number(order.totalAmount || 0),
-    0
+    0,
   );
 
   return (
@@ -94,7 +69,7 @@ const CustomerPage = async () => {
             {orders.length} order{orders.length !== 1 ? "s" : ""} placed
           </p>
         </div>
-        <Link href="/">
+        <Link href="/gear">
           <Button variant="outline" className="rounded-lg">
             Browse Gear
           </Button>
@@ -118,7 +93,7 @@ const CustomerPage = async () => {
             <p className="text-sm text-muted-foreground">
               Total spent across all orders:{" "}
               <span className="font-semibold text-foreground">
-                ${totalSpent.toFixed(2)}
+                {totalSpent.toFixed(2)} tk
               </span>
             </p>
           </CardContent>
@@ -141,13 +116,15 @@ const CustomerPage = async () => {
             <Card key={order.id}>
               <CardHeader>
                 <CardTitle className="text-base">
-                  Order #{order.id.slice(0, 8)}
+                  Order #{order.id.slice(25)}
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="mb-4 text-sm text-muted-foreground space-y-1">
                   <p>
-                    <span className="font-medium text-foreground">Provider:</span>{" "}
+                    <span className="font-medium text-foreground">
+                      Provider:
+                    </span>{" "}
                     {order.provider.name}
                   </p>
                   <p>
@@ -175,7 +152,7 @@ const CustomerPage = async () => {
                     </TableHeader>
                     <TableBody>
                       {order.rentalOrderItems.map((oi, idx) => (
-                        <TableRow key={idx}>
+                        <TableRow key={oi.item.name}>
                           <TableCell className="font-medium">
                             <div className="flex items-center gap-2">
                               <div className="relative h-10 w-10 rounded overflow-hidden bg-muted">
@@ -184,6 +161,7 @@ const CustomerPage = async () => {
                                     src={oi.item.image}
                                     alt={oi.item.name}
                                     fill
+                                    sizes="40px"
                                     className="object-cover"
                                   />
                                 )}
@@ -192,7 +170,7 @@ const CustomerPage = async () => {
                             </div>
                           </TableCell>
                           <TableCell>{oi.quantity}</TableCell>
-                          <TableCell>${oi.item.dailyRate}</TableCell>
+                          <TableCell>{oi.item.dailyRate} tk</TableCell>
                         </TableRow>
                       ))}
                     </TableBody>
@@ -204,11 +182,13 @@ const CustomerPage = async () => {
                     <p className="text-sm text-muted-foreground">
                       Total Amount
                     </p>
-                    <p className="text-2xl font-bold">${order.totalAmount}</p>
+                    <p className="text-2xl font-bold">{order.totalAmount} tk</p>
                   </div>
                   <div className="flex items-center gap-3">
-                    <Badge variant={getPaymentStatusVariant(order.payment?.status)}>
-                      {order.payment?.status ?? "NO PAYMENT"}
+                    <Badge
+                      variant={getPaymentStatusVariant(order.payment?.status)}
+                    >
+                      {order.payment?.status ?? "UNPAID"}
                     </Badge>
                     {!isPaid(order.payment?.status) && (
                       <PayNowButton orderId={order.id} />

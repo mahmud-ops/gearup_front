@@ -1,4 +1,4 @@
-import { RentalOrdersResponse, PaymentResponse } from "@/types/rental.types";
+import { RentalOrdersResponse, PaymentResponse, PaymentStatus } from "@/types/rental.types";
 
 export const createRental = async (payload: unknown, token: string) => {
   const response = await fetch(
@@ -70,4 +70,24 @@ export const getPaymentStatuses = async (
 
   const result: PaymentResponse = await response.json();
   return result;
+};
+
+export const formatDate = (dateString: string) => {
+  return new Date(dateString).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+};
+
+export const getPaymentStatusVariant = (
+  status?: PaymentStatus,
+): "default" | "secondary" | "destructive" | "outline" => {
+  if (!status) return "secondary";
+  const normalized = status.toLowerCase();
+  if (normalized === "completed") return "default";
+  if (normalized === "failed" || normalized === "cancelled") {
+    return "destructive";
+  }
+  return "secondary";
 };
