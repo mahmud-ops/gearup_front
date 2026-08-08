@@ -27,14 +27,14 @@ export const logout = () => {
   window.location.href = "/";
 };
 
-export const getCurrentUser = async (): Promise<CurrentUser> => {
+export const getCurrentUser = async (token: string): Promise<CurrentUser> => {
   const response = await fetch(
     "https://gearup-backend-api.onrender.com/api/users/me",
     {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${Cookies.get("accessToken")}`,
+        Authorization: `Bearer ${token}`,
       },
     }
   );

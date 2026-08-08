@@ -1,4 +1,5 @@
 "use client";
+
 import { Button } from "../ui/button";
 import Link from "next/link";
 import Cookies from "js-cookie";
@@ -6,16 +7,23 @@ import { logout } from "@/services/auth";
 import { getCurrentUser } from "@/services/auth";
 import { useEffect, useState } from "react";
 import { CurrentUser } from "@/types/user.types";
+import { redirect } from "next/navigation";
+import { jwtDecode } from "jwt-decode";
 
 const Navbar = () => {
   const [mounted, setMounted] = useState(false);
   const [user, setUser] = useState<CurrentUser | null>(null);
 
   useEffect(() => {
+    const token = Cookies.get("accessToken");
+
+    if (token) {
+      const user = jwtDecode(token);
+    }
     setMounted(true);
     (async () => {
       try {
-        const currentUser = await getCurrentUser();
+        const currentUser = await getCurrentUser(token as string);
         setUser(currentUser);
       } catch (error) {
         console.error("Failed to fetch user:", error);
