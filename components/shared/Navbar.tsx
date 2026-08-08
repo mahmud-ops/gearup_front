@@ -13,6 +13,7 @@ import { jwtDecode } from "jwt-decode";
 const Navbar = () => {
   const [mounted, setMounted] = useState(false);
   const [user, setUser] = useState<CurrentUser | null>(null);
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     const token = Cookies.get("accessToken");
@@ -37,18 +38,35 @@ const Navbar = () => {
   }
 
   return (
-    <nav className="flex items-center justify-between px-6 py-4 border-b">
-      {/* Logo as Home link */}
-      <Link href="/" className="flex items-center">
-        <img
-          src="/gearup_logo.png"
-          alt="GearUp Logo"
-          className="h-10 w-auto object-contain"
-        />
-      </Link>
+    <nav className="flex flex-col sm:flex-row sm:items-center justify-between px-6 py-4 border-b gap-4">
+      <div className="flex items-center justify-between">
+        {/* Logo as Home link */}
+        <Link href="/" className="flex items-center">
+          <img
+            src="/gearup_logo.png"
+            alt="GearUp Logo"
+            className="h-10 w-auto object-contain"
+          />
+        </Link>
+
+        {/* Mobile menu button */}
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="sm:hidden text-gray-700 focus:outline-none p-1"
+          aria-label="Toggle Menu"
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            {isOpen ? (
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            ) : (
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            )}
+          </svg>
+        </button>
+      </div>
 
       {/* Main Navigation Links */}
-      <div className="flex items-center gap-6 text-sm font-medium">
+      <div className={`${isOpen ? "flex" : "hidden"} sm:flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 text-sm font-medium`}>
         <Link href="/gear">Browse Gear</Link>
         <Link href="/auth/register?role=provider">Become a Provider</Link>
         {user && (
@@ -57,20 +75,20 @@ const Navbar = () => {
       </div>
 
       {/* Auth Buttons */}
-      <div className="flex items-center gap-3">
+      <div className={`${isOpen ? "flex" : "hidden"} sm:flex flex-col sm:flex-row items-stretch sm:items-center gap-3`}>
         {user ? (
           <Button className="rounded-lg" onClick={logout}>
             Logout
           </Button>
         ) : (
           <>
-            <Link href="/login">
-              <Button variant={"outline"} className={"rounded-lg"}>
+            <Link href="/login" className="w-full sm:w-auto">
+              <Button variant={"outline"} className={"rounded-lg w-full sm:w-auto"}>
                 Login
               </Button>
             </Link>
-            <Link href="/register">
-              <Button className={"rounded-lg"}>Register</Button>
+            <Link href="/register" className="w-full sm:w-auto">
+              <Button className={"rounded-lg w-full sm:w-auto"}>Register</Button>
             </Link>
           </>
         )}
