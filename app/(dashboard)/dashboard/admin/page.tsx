@@ -1,4 +1,4 @@
-import { ArrowRight, Users } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import Link from "next/link";
@@ -55,16 +55,21 @@ const AdminPage = async () => {
         </Card>
       </Link>
 
-      <Card>
-        <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-medium text-muted-foreground">
-            Total Gear
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="text-3xl font-bold">{gears.length}</div>
-        </CardContent>
-      </Card>
+      <Link href="/dashboard/admin/gear">
+        <Card className="transition-colors hover:border-primary hover:shadow-md cursor-pointer">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Total Gear
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center justify-between">
+              <div className="text-3xl font-bold">{gears.length}</div>
+              <ArrowRight className="h-5 w-5 text-muted-foreground" />
+            </div>
+          </CardContent>
+        </Card>
+      </Link>
 
       <Card>
         <CardHeader className="pb-2">
