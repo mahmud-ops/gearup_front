@@ -68,3 +68,22 @@ export const getAllUsers = async (
   const data: UsersResponse = await response.json();
   return data;
 };
+
+export const suspendUser = async (token: string, userId: string) => {
+  const response = await fetch(
+    `https://gearup-backend-api.onrender.com/api/users/${userId}`,
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.message || "Failed to suspend user");
+  }
+  return data;
+};

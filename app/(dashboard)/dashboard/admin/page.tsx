@@ -1,5 +1,7 @@
+import { ArrowRight, Users } from "lucide-react";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getGears } from "@/services/gear";
 import { getAllUsers } from "@/services/auth";
@@ -37,16 +39,21 @@ const AdminPage = async () => {
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-      <Card>
-        <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-medium text-muted-foreground">
-            Total Users
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="text-3xl font-bold">{users.length}</div>
-        </CardContent>
-      </Card>
+      <Link href="/dashboard/admin/users">
+        <Card className="transition-colors hover:border-primary hover:shadow-md cursor-pointer">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Total Users
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center justify-between">
+              <div className="text-3xl font-bold">{users.length}</div>
+              <ArrowRight className="h-5 w-5 text-muted-foreground" />
+            </div>
+          </CardContent>
+        </Card>
+      </Link>
 
       <Card>
         <CardHeader className="pb-2">
