@@ -20,13 +20,6 @@ const HeroSection = () => {
             Browse Gear
           </Button>
         </Link>
-
-        <Button
-          variant="outline"
-          className="px-6 py-2.5 rounded-lg font-medium border"
-        >
-          Become a Provider
-        </Button>
       </div>
     </section>
   );

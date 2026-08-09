@@ -68,7 +68,6 @@ const Navbar = () => {
       {/* Main Navigation Links */}
       <div className={`${isOpen ? "flex" : "hidden"} sm:flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 text-sm font-medium`}>
         <Link href="/gear">Browse Gear</Link>
-        <Link href="/auth/register?role=provider">Become a Provider</Link>
         {user && (
           <Link href={`/dashboard/${user.role.toLowerCase()}`}>Dashboard</Link>
         )}

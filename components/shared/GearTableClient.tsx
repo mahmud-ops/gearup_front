@@ -87,7 +87,7 @@ export default function GearTableClient({ gears }: GearTableClientProps) {
             Manage your listed equipment
           </p>
         </div>
-        <Button size="sm" onClick={() => handleAdd}>
+          <Button size="sm" onClick={handleAdd}>
           <Plus className="mr-2 h-4 w-4" />
           Add Gear
         </Button>
