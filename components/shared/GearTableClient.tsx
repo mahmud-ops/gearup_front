@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Pencil, Trash2, Image as ImageIcon, Plus } from "lucide-react";
+import Cookies from "js-cookie";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -15,6 +16,7 @@ import {
 } from "@/components/ui/table";
 import AddGearModal from "@/components/shared/AddGearModal";
 import { GearItem } from "@/types/gear.types";
+import { deleteGear } from "@/services/gear";
 
 interface GearTableClientProps {
   gears: GearItem[];
@@ -24,6 +26,12 @@ export default function GearTableClient({ gears }: GearTableClientProps) {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<GearItem | null>(null);
+  const [toast, setToast] = useState<string | null>(null);
+
+  const showToast = (message: string) => {
+    setToast(message);
+    setTimeout(() => setToast(null), 4000);
+  };
 
   const handleEdit = (item: GearItem) => {
     setEditingItem(item);
@@ -44,8 +52,32 @@ export default function GearTableClient({ gears }: GearTableClientProps) {
     router.refresh();
   };
 
+  const handleDelete = async (item: GearItem) => {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this gear?",
+    );
+    if (!confirmed) return;
+
+    try {
+      const token = Cookies.get("accessToken");
+      if (!token) {
+        showToast("Authentication required");
+        return;
+      }
+      await deleteGear(item.id, token);
+      router.refresh();
+    } catch (err) {
+      showToast(err instanceof Error ? err.message : "Failed to delete gear");
+    }
+  };
+
   return (
     <>
+      {toast && (
+        <div className="fixed right-4 top-4 z-50 rounded-md border border-destructive bg-destructive px-4 py-3 text-sm text-white shadow-md">
+          {toast}
+        </div>
+      )}
       <div className="mb-6 flex items-center justify-between">
         <div>
           <h1 className="text-xl font-semibold tracking-tight">
@@ -112,6 +144,7 @@ export default function GearTableClient({ gears }: GearTableClientProps) {
                         <Button
                           variant="outline"
                           size="icon"
+                          onClick={() => handleDelete(item)}
                           aria-label="Delete item"
                         >
                           <Trash2 className="h-4 w-4" />
@@ -158,6 +191,7 @@ export default function GearTableClient({ gears }: GearTableClientProps) {
                             variant="ghost"
                             size="icon"
                             className="h-8 w-8"
+                            onClick={() => handleDelete(item)}
                             aria-label="Delete item"
                           >
                             <Trash2 className="h-3.5 w-3.5" />

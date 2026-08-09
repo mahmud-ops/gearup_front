@@ -91,3 +91,23 @@ export const updateGear = async (
 
   return data;
 };
+
+export const deleteGear = async (id: string, token: string) => {
+  const response = await fetch(
+    `https://gearup-backend-api.onrender.com/api/gear_items/${id}`,
+    {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || "Failed to delete gear");
+  }
+
+  return data;
+};
