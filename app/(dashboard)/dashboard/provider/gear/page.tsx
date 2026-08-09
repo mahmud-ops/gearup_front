@@ -15,6 +15,7 @@ import { Pencil, Trash2, Image as ImageIcon } from "lucide-react";
 import { getGears } from "@/services/gear";
 import { getCurrentUser } from "@/services/auth";
 import { GearItem } from "@/types/gear.types";
+import AddGearModal from "@/components/shared/AddGearModal";
 
 const ProviderGearPage = async () => {
   const cookieStore = await cookies();
@@ -40,7 +41,7 @@ const ProviderGearPage = async () => {
             Manage your listed equipment
           </p>
         </div>
-        <Button size="sm">Add Gear</Button>
+        <AddGearModal />
       </div>
 
       {providerGears.length === 0 ? (

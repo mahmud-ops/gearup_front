@@ -21,6 +21,15 @@ export interface GearItem {
   category: Category;
 }
 
+export type AddGearPayload = {
+  name: string;
+  description: string;
+  dailyRate: number;
+  availableQuantity: number;
+  image: string;
+  categoryId: string;
+};
+
 export interface GearResponse {
   success: boolean;
   statusCode: number;

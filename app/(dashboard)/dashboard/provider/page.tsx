@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import React from "react";
 import { getRentalOrders } from "@/services/rentals";
+import { InventoryButton } from "@/components/shared/InventoryButton";
 
 const Providerpage = async () => {
   const gears = await getGears();
@@ -44,7 +45,9 @@ const Providerpage = async () => {
           <div className="text-3xl font-bold">{orderCount}</div>
         </CardContent>
       </Card>
+      <InventoryButton />
     </div>
+
   );
 };
 

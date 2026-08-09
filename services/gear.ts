@@ -1,4 +1,4 @@
-import { Category, GearItem, GearResponse } from "@/types/gear.types";
+import { Category, GearItem, GearResponse, AddGearPayload } from "@/types/gear.types";
 
 export const getCategories = async (): Promise<Category[]> => {
   const response = await fetch(
@@ -42,4 +42,26 @@ export const getGear = async (id: string): Promise<GearItem> => {
 
   const result = await response.json();
   return result.data;
+};
+
+export const addGear = async (payload: AddGearPayload, token: string) => {
+  const response = await fetch(
+    "https://gearup-backend-api.onrender.com/api/gear_items",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(payload),
+    }
+  );
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || "Failed to add gear");
+  }
+
+  return data;
 };
