@@ -1,3 +1,10 @@
+export interface UsersResponse {
+  success: boolean;
+  statusCode: number;
+  message: string;
+  data: CurrentUser[];
+}
+
 export interface CurrentUser {
   id: string;
   name: string;
