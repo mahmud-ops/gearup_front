@@ -24,6 +24,7 @@ export interface RentalOrder {
   createdAt: string;
   updatedAt: string;
   provider: Provider;
+  customer: Provider;
   rentalOrderItems: RentalOrderItem[];
   payment?: Payment;
 }
@@ -51,3 +52,8 @@ export interface PaymentResponse {
   message: string;
   data: Payment[];
 }
+
+export type OrderStatus =
+  | "CONFIRMED"
+  | "PICKEDUP"
+  | "RETURNED";

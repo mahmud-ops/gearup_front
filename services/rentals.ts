@@ -1,4 +1,9 @@
-import { RentalOrdersResponse, PaymentResponse, PaymentStatus } from "@/types/rental.types";
+import {
+  RentalOrdersResponse,
+  PaymentResponse,
+  PaymentStatus,
+  OrderStatus,
+} from "@/types/rental.types";
 
 export const createRental = async (payload: unknown, token: string) => {
   const response = await fetch(
@@ -72,6 +77,33 @@ export const getProviderOrders = async (
   return result;
 };
 
+export const updateOrderStatus = async (
+  orderId: string,
+  status: string,
+  token: string,
+) => {
+  const response = await fetch(
+    `https://gearup-backend-api.onrender.com/api/rental_orders/${orderId}/status`,
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token,
+      },
+      body: JSON.stringify({ status }),
+    }
+  );
+
+  if (!response.ok) {
+    if (response.status === 401) {
+      throw new Error("Unauthorized");
+    }
+    throw new Error(`HTTP ${response.status}`);
+  }
+
+  return response.json();
+};
+
 export const getPaymentStatuses = async (
   token: string
 ): Promise<PaymentResponse> => {
@@ -112,6 +144,20 @@ export const getPaymentStatusVariant = (
   const normalized = status.toLowerCase();
   if (normalized === "completed") return "default";
   if (normalized === "failed" || normalized === "cancelled") {
+    return "destructive";
+  }
+  return "secondary";
+};
+
+export const getOrderStatusVariant = (
+  status?: OrderStatus,
+): "default" | "secondary" | "destructive" | "outline" => {
+  if (!status) return "secondary";
+  const normalized = status.toLowerCase();
+  if (normalized === "confirmed" || normalized === "pickedup") {
+    return "default";
+  }
+  if (normalized === "returned") {
     return "destructive";
   }
   return "secondary";
