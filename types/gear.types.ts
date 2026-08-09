@@ -30,6 +30,8 @@ export type AddGearPayload = {
   categoryId: string;
 };
 
+export type UpdateGearPayload = Partial<AddGearPayload>;
+
 export interface GearResponse {
   success: boolean;
   statusCode: number;
