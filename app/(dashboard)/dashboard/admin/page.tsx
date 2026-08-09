@@ -71,16 +71,21 @@ const AdminPage = async () => {
         </Card>
       </Link>
 
-      <Card>
-        <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-medium text-muted-foreground">
-            Total Rentals
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="text-3xl font-bold">{orders.length}</div>
-        </CardContent>
-      </Card>
+      <Link href="/dashboard/admin/orders">
+        <Card className="transition-colors hover:border-primary hover:shadow-md cursor-pointer">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Total Rentals
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center justify-between">
+              <div className="text-3xl font-bold">{orders.length}</div>
+              <ArrowRight className="h-5 w-5 text-muted-foreground" />
+            </div>
+          </CardContent>
+        </Card>
+      </Link>
     </div>
   );
 };
