@@ -47,6 +47,31 @@ export const getRentalOrders = async (
   return result;
 };
 
+export const getProviderOrders = async (
+  token: string
+): Promise<RentalOrdersResponse> => {
+  const response = await fetch(
+    "https://gearup-backend-api.onrender.com/api/rental_orders/provider/me",
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token,
+      },
+    }
+  );
+
+  if (!response.ok) {
+    if (response.status === 401) {
+      throw new Error("Unauthorized");
+    }
+    throw new Error(`HTTP ${response.status}`);
+  }
+
+  const result: RentalOrdersResponse = await response.json();
+  return result;
+};
+
 export const getPaymentStatuses = async (
   token: string
 ): Promise<PaymentResponse> => {

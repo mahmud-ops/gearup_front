@@ -4,7 +4,7 @@ import { getGears } from "@/services/gear";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import React from "react";
-import { getRentalOrders } from "@/services/rentals";
+import { getProviderOrders } from "@/services/rentals";
 import { InventoryButton } from "@/components/shared/InventoryButton";
 
 const Providerpage = async () => {
@@ -17,7 +17,7 @@ const Providerpage = async () => {
     redirect("/login");
   }
 
-  const orders = await getRentalOrders(token);
+  const orders = await getProviderOrders(token);
   const user = await getCurrentUser(token);
   const gearCount = gears.filter((g) => g.providerId === user.id).length;
   const orderCount = orders.data.length;
