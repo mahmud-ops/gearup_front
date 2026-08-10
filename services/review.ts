@@ -1,4 +1,4 @@
-import { CreateReviewPayload, Review } from "@/types/review.types";
+import { CreateReviewPayload, Review, ReviewsResponse } from "@/types/review.types";
 
 export const createReview = async (
   orderId: string,
@@ -24,4 +24,17 @@ export const createReview = async (
   }
 
   return data.data;
+};
+
+export const getReviewsByGear = async (gearId: string): Promise<Review[]> => {
+  const response = await fetch(
+    `https://gearup-backend-api.onrender.com/api/review/gear/${gearId}`,
+  );
+
+  if (!response.ok) {
+    throw new Error(`HTTP ${response.status}`);
+  }
+
+  const result: ReviewsResponse = await response.json();
+  return result.data;
 };

@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { getGear } from "@/services/gear";
+import ReviewsSection from "@/components/shared/ReviewsSection";
 
 
 
@@ -66,6 +67,11 @@ const GearDetailsPage = async ({ params }: Props) => {
             </Link>
           </div>
         </div>
+      </div>
+
+      <div className="mt-8">
+        <h2 className="text-2xl font-bold mb-4">Reviews</h2>
+        <ReviewsSection gearId={id} />
       </div>
     </div>
   );
