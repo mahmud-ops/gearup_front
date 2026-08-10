@@ -15,7 +15,8 @@ import {
 } from "@/components/ui/select";
 import { Card } from "@/components/ui/card";
 import { Category, AddGearPayload, GearItem } from "@/types/gear.types";
-import { getCategories, addGear, updateGear } from "@/services/gear";
+import { getCategories } from "@/services/category";
+import { addGear, updateGear } from "@/services/gear";
 import Cookies from "js-cookie";
 import { uploadImage } from "@/services/cloudinary";
 
@@ -77,6 +78,12 @@ export default function AddGearModal({
     return () => {
       cancelled = true;
     };
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen) {
+      categoriesFetchedRef.current = false;
+    }
   }, [isOpen]);
 
   const handleSubmit = async (e: React.FormEvent) => {

@@ -1,11 +1,6 @@
-export interface Category {
-  id: string;
-  name: string;
-  slug: string;
-  description: string;
-  createdAt: string;
-  updatedAt: string;
-}
+import type { Category } from "@/types/category.types";
+
+export type { Category } from "@/types/category.types";
 
 export interface GearItem {
   id: string;

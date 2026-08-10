@@ -23,4 +23,5 @@
 - Dashboard
 - Users
 - Gear
+- Categories
 - Rental Orders

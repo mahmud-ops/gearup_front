@@ -4,9 +4,11 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getGears } from "@/services/gear";
+import { getCategories } from "@/services/category";
 import { getAllUsers } from "@/services/auth";
 import { getAllRentalOrders } from "@/services/rentals";
 import { CurrentUser } from "@/types/user.types";
+import { Category } from "@/types/category.types";
 
 const AdminPage = async () => {
   const cookieStore = await cookies();
@@ -19,16 +21,20 @@ const AdminPage = async () => {
   let users: CurrentUser[] = [];
   let gears: Awaited<ReturnType<typeof getGears>> = [];
   let orders: Awaited<ReturnType<typeof getAllRentalOrders>>["data"] = [];
+  let categories: Category[] = [];
 
   try {
-    const [usersResult, gearsResult, ordersResult] = await Promise.all([
-      getAllUsers(token),
-      getGears(),
-      getAllRentalOrders(token),
-    ]);
+    const [usersResult, gearsResult, ordersResult, categoriesResult] =
+      await Promise.all([
+        getAllUsers(token),
+        getGears(),
+        getAllRentalOrders(token),
+        getCategories(),
+      ]);
     users = usersResult.data;
     gears = gearsResult;
     orders = ordersResult.data;
+    categories = categoriesResult;
   } catch (err) {
     const message = err instanceof Error ? err.message : "Failed to load stats";
     if (message === "Unauthorized") {
@@ -81,6 +87,22 @@ const AdminPage = async () => {
           <CardContent>
             <div className="flex items-center justify-between">
               <div className="text-3xl font-bold">{orders.length}</div>
+              <ArrowRight className="h-5 w-5 text-muted-foreground" />
+            </div>
+          </CardContent>
+        </Card>
+      </Link>
+
+      <Link href="/dashboard/admin/categories">
+        <Card className="transition-colors hover:border-primary hover:shadow-md cursor-pointer">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Total Categories
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center justify-between">
+              <div className="text-3xl font-bold">{categories.length}</div>
               <ArrowRight className="h-5 w-5 text-muted-foreground" />
             </div>
           </CardContent>

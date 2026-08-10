@@ -1,17 +1,6 @@
-import { Category, GearItem, GearResponse, AddGearPayload, UpdateGearPayload } from "@/types/gear.types";
+import { GearItem, GearResponse, AddGearPayload, UpdateGearPayload } from "@/types/gear.types";
 
-export const getCategories = async (): Promise<Category[]> => {
-  const response = await fetch(
-    "https://gearup-backend-api.onrender.com/api/categories",
-  );
-
-  if (!response.ok) {
-    throw new Error(`HTTP ${response.status}`);
-  }
-
-  const result = await response.json();
-  return result.data;
-};
+export { getCategories } from "@/services/category";
 
 export const getGears = async (search?: string): Promise<GearItem[]> => {
   const response = await fetch(
