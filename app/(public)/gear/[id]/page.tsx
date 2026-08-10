@@ -3,7 +3,9 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { getGear } from "@/services/gear";
+import { getCurrentUser } from "@/services/auth";
 import ReviewsSection from "@/components/shared/ReviewsSection";
+import { cookies } from "next/headers";
 
 
 
@@ -18,6 +20,17 @@ type Props = {
 const GearDetailsPage = async ({ params }: Props) => {
   const { id } = await params;
   const gear = await getGear(id);
+
+  const token = (await cookies()).get("accessToken")?.value;
+  let currentUserId: string | undefined;
+  if (token) {
+    try {
+      const user = await getCurrentUser(token);
+      currentUserId = user.id;
+    } catch {
+      currentUserId = undefined;
+    }
+  }
 
   return (
     <div className="container mx-auto p-4 md:p-8 max-w-5xl">
@@ -71,7 +84,7 @@ const GearDetailsPage = async ({ params }: Props) => {
 
       <div className="mt-8">
         <h2 className="text-2xl font-bold mb-4">Reviews</h2>
-        <ReviewsSection gearId={id} />
+        <ReviewsSection gearId={id} currentUserId={currentUserId} />
       </div>
     </div>
   );

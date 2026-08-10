@@ -36,6 +36,11 @@ export interface CreateReviewPayload {
   comment: string;
 }
 
+export interface UpdateReviewPayload {
+  rating?: number;
+  comment?: string;
+}
+
 export interface ReviewsResponse {
   success: boolean;
   statusCode: number;
