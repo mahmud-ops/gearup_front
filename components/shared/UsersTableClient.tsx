@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowRight, UserCheck, UserX } from "lucide-react";
 import Cookies from "js-cookie";
@@ -22,6 +22,7 @@ import { CenteredSpinner } from "@/components/shared/CenteredSpinner";
 
 const SUSPENDED_STATUS = "SUSPENDED";
 const ACTIVE_STATUS = "ACTIVE";
+const PAGE_SIZE = 7;
 
 function getStatusBadgeClass(status: string) {
   if (status === SUSPENDED_STATUS) {
@@ -60,13 +61,14 @@ export default function UsersTableClient() {
   const [loading, setLoading] = useState(true);
   const [updatingId, setUpdatingId] = useState<string | null>(null);
   const [toast, setToast] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const showToast = (message: string) => {
     setToast(message);
     setTimeout(() => setToast(null), 4000);
   };
 
-  const fetchUsers = async () => {
+  const fetchUsers = useCallback(async () => {
     const token = Cookies.get("accessToken");
     if (!token) {
       router.push("/login");
@@ -85,7 +87,7 @@ export default function UsersTableClient() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [router]);
 
   const handleSuspend = async (user: CurrentUser) => {
     const token = Cookies.get("accessToken");
@@ -119,6 +121,7 @@ export default function UsersTableClient() {
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchUsers();
   }, [fetchUsers]);
 
@@ -132,6 +135,23 @@ export default function UsersTableClient() {
         user.email.toLowerCase().includes(query),
     );
   }, [users, searchQuery]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredUsers.length / PAGE_SIZE));
+
+  const paginatedUsers = useMemo(() => {
+    const start = (currentPage - 1) * PAGE_SIZE;
+    return filteredUsers.slice(start, start + PAGE_SIZE);
+  }, [filteredUsers, currentPage]);
+
+  const goToPrev = () => {
+    setCurrentPage((prev) => (prev > 1 ? prev - 1 : prev));
+  };
+
+  const goToNext = () => {
+    setCurrentPage((prev) =>
+      prev < totalPages ? prev + 1 : prev,
+    );
+  };
 
   return (
     <>
@@ -153,7 +173,10 @@ export default function UsersTableClient() {
             <Input
               placeholder="Search by name or email..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                setCurrentPage(1);
+              }}
             />
           </div>
         </div>
@@ -179,7 +202,7 @@ export default function UsersTableClient() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredUsers.map((user) => (
+                {paginatedUsers.map((user) => (
                   <TableRow key={user.id}>
                     <TableCell className="font-medium">{user.name}</TableCell>
                     <TableCell>{user.email}</TableCell>
@@ -198,6 +221,27 @@ export default function UsersTableClient() {
                 ))}
               </TableBody>
             </Table>
+            <div className="flex items-center justify-between px-4 py-3 border-t">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={goToPrev}
+                disabled={currentPage === 1}
+              >
+                Previous
+              </Button>
+              <span className="text-sm text-muted-foreground">
+                Page {currentPage} of {totalPages}
+              </span>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={goToNext}
+                disabled={currentPage === totalPages}
+              >
+                Next
+              </Button>
+            </div>
           </div>
         )}
       </div>
