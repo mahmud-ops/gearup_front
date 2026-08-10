@@ -18,6 +18,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { getAllUsers, suspendUser } from "@/services/auth";
 import { CurrentUser } from "@/types/user.types";
+import { CenteredSpinner } from "@/components/shared/CenteredSpinner";
 
 const SUSPENDED_STATUS = "SUSPENDED";
 const ACTIVE_STATUS = "ACTIVE";
@@ -158,11 +159,7 @@ export default function UsersTableClient() {
         </div>
 
         {loading ? (
-          <Card>
-            <CardContent className="pt-6">
-              <p className="text-sm text-muted-foreground">Loading users...</p>
-            </CardContent>
-          </Card>
+          <CenteredSpinner />
         ) : filteredUsers.length === 0 ? (
           <Card>
             <CardContent className="pt-6 flex flex-col items-center text-center">

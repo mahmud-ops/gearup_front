@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/table";
 import { GearItem } from "@/types/gear.types";
 import { getGears, deleteGear } from "@/services/gear";
+import { CenteredSpinner } from "@/components/shared/CenteredSpinner";
 
 export default function AdminGearTableClient() {
   const router = useRouter();
@@ -89,11 +90,7 @@ export default function AdminGearTableClient() {
         </div>
 
         {loading ? (
-          <Card>
-            <CardContent className="pt-6">
-              <p className="text-sm text-muted-foreground">Loading gear...</p>
-            </CardContent>
-          </Card>
+          <CenteredSpinner />
         ) : gears.length === 0 ? (
           <Card>
             <CardContent className="pt-6 flex flex-col items-center text-center">

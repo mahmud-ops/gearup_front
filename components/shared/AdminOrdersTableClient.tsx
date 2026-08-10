@@ -15,6 +15,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { RentalOrder } from "@/types/rental.types";
 import { getAllRentalOrders, formatDate, getPaymentStatusVariant, getOrderStatusVariant } from "@/services/rentals";
+import { CenteredSpinner } from "@/components/shared/CenteredSpinner";
 
 export default function AdminOrdersTableClient() {
   const router = useRouter();
@@ -51,13 +52,7 @@ export default function AdminOrdersTableClient() {
   }, []);
 
   if (loading) {
-    return (
-      <Card>
-        <CardContent className="pt-6">
-          <p className="text-sm text-muted-foreground">Loading orders...</p>
-        </CardContent>
-      </Card>
-    );
+    return <CenteredSpinner />;
   }
 
   return (

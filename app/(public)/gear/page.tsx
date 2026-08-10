@@ -6,6 +6,7 @@ import GearCard from "@/components/shared/GearCard";
 import FilterModal from "@/components/shared/FilterModal";
 import { getCategories, getGears } from "@/services/gear";
 import { GearItem } from "@/types/gear.types";
+import { CenteredSpinner } from "@/components/shared/CenteredSpinner";
 
 const toNumber = (value: string): number | null => {
   if (value.trim() === "") return null;
@@ -105,7 +106,9 @@ const GearPage = () => {
         </p>
       </div>
 
-      {loaded && displayed.length === 0 ? (
+      {!loaded ? (
+        <CenteredSpinner className="min-h-[400px]" />
+      ) : displayed.length === 0 ? (
         <p className="text-center text-muted-foreground py-8">
           No gear matches your filters.
         </p>
