@@ -1,9 +1,7 @@
 "use client";
 
-import { useMemo, useState, useEffect, useCallback } from "react";
-import { useRouter } from "next/navigation";
-import { ArrowRight, UserCheck, UserX } from "lucide-react";
-import Cookies from "js-cookie";
+import { CenteredSpinner } from "@/components/shared/CenteredSpinner";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -15,10 +13,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
 import { getAllUsers, suspendUser } from "@/services/auth";
 import { CurrentUser } from "@/types/user.types";
-import { CenteredSpinner } from "@/components/shared/CenteredSpinner";
+import Cookies from "js-cookie";
+import { UserCheck, UserX } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 const SUSPENDED_STATUS = "SUSPENDED";
 const ACTIVE_STATUS = "ACTIVE";

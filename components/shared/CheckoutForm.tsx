@@ -9,6 +9,7 @@ import { GearItem } from "@/types/gear.types";
 import { calculateDays, calculatePrice } from "@/services/gear.utils";
 import { createRental } from "@/services/rentals";
 import Cookies from "js-cookie";
+import { Spinner } from "@/components/ui/spinner";
 import { createCheckoutSession } from "@/services/payment";
 
 export const CheckoutForm = ({ gear }: { gear: GearItem }) => {
@@ -120,8 +121,9 @@ export const CheckoutForm = ({ gear }: { gear: GearItem }) => {
           onClick={handleConfirm}
           type="button"
           className="w-full rounded-lg"
-          disabled={!isValid}
+          disabled={!isValid || loading}
         >
+          {loading && <Spinner className="mr-2 h-4 w-4" />}
           Confirm Rental
         </Button>
       </CardContent>

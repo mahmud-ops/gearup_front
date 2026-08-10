@@ -51,6 +51,7 @@ export default function ReviewEditModal({
       const updated = await updateReview(review.id, payload, token);
       onSuccess?.(updated);
       onClose();
+      window.location.reload();
     } catch (err) {
       console.error("Review update error:", err);
       setError(err instanceof Error ? err.message : "Failed to update review");

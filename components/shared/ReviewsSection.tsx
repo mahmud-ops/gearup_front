@@ -65,6 +65,7 @@ export default function ReviewsSection({
     setReviews((prev) =>
       prev.map((r) => (r.id === updated.id ? updated : r)),
     );
+    window.location.reload();
   };
 
   const handleDeleteClick = (reviewId: string) => {
@@ -81,6 +82,7 @@ export default function ReviewsSection({
       await deleteReview(deletingReviewId, token);
       setReviews((prev) => prev.filter((r) => r.id !== deletingReviewId));
       setDeletingReviewId(null);
+      window.location.reload();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to delete review");
       setDeletingReviewId(null);
