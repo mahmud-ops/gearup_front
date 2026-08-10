@@ -1,22 +1,10 @@
 import { cookies } from "next/headers";
-import Image from "next/image";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { RentalOrder, PaymentStatus } from "@/types/rental.types";
-import { getRentalOrders, getPaymentStatuses, formatDate, getPaymentStatusVariant } from "@/services/rentals";
-import { PayNowButton } from "@/components/shared/PayNowButton";
-
-const isPaid = (status?: PaymentStatus) => status === "COMPLETED";
+import { RentalOrder } from "@/types/rental.types";
+import { getRentalOrders, getPaymentStatuses } from "@/services/rentals";
+import CustomerOrdersClient from "@/components/shared/CustomerOrdersClient";
 
 const CustomerPage = async () => {
   const cookieStore = await cookies();
@@ -84,7 +72,7 @@ const CustomerPage = async () => {
         </Card>
       )}
 
-      {orders.length > 0 && (
+      {orders.length > 0 && !error && (
         <Card>
           <CardHeader>
             <CardTitle className="text-lg">Order Summary</CardTitle>
@@ -110,96 +98,7 @@ const CustomerPage = async () => {
         </Card>
       )}
 
-      {orders.length > 0 && (
-        <div className="space-y-6">
-          {orders.map((order: RentalOrder) => (
-            <Card key={order.id}>
-              <CardHeader>
-                <CardTitle className="text-base">
-                  Order #{order.id.slice(25)}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="mb-4 text-sm text-muted-foreground space-y-1">
-                  <p>
-                    <span className="font-medium text-foreground">
-                      Provider:
-                    </span>{" "}
-                    {order.provider.name}
-                  </p>
-                  <p>
-                    <span className="font-medium text-foreground">
-                      Start Date:
-                    </span>{" "}
-                    {formatDate(order.startDate)}
-                  </p>
-                  <p>
-                    <span className="font-medium text-foreground">
-                      End Date:
-                    </span>{" "}
-                    {formatDate(order.endDate)}
-                  </p>
-                </div>
-
-                <div className="overflow-x-auto">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Item</TableHead>
-                        <TableHead>Quantity</TableHead>
-                        <TableHead>Daily Rate</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {order.rentalOrderItems.map((oi, idx) => (
-                        <TableRow key={oi.item.name}>
-                          <TableCell className="font-medium">
-                            <div className="flex items-center gap-2">
-                              <div className="relative h-10 w-10 rounded overflow-hidden bg-muted">
-                                {oi.item.image && (
-                                  <Image
-                                    src={oi.item.image}
-                                    alt={oi.item.name}
-                                    fill
-                                    sizes="40px"
-                                    className="object-cover"
-                                  />
-                                )}
-                              </div>
-                              {oi.item.name}
-                            </div>
-                          </TableCell>
-                          <TableCell>{oi.quantity}</TableCell>
-                          <TableCell>{oi.item.dailyRate} tk</TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </div>
-
-                <div className="mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                  <div className="text-right sm:text-left">
-                    <p className="text-sm text-muted-foreground">
-                      Total Amount
-                    </p>
-                    <p className="text-2xl font-bold">{order.totalAmount} tk</p>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <Badge
-                      variant={getPaymentStatusVariant(order.payment?.status)}
-                    >
-                      {order.payment?.status ?? "UNPAID"}
-                    </Badge>
-                    {!isPaid(order.payment?.status) && (
-                      <PayNowButton orderId={order.id} />
-                    )}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      )}
+      <CustomerOrdersClient orders={orders} />
     </div>
   );
 };

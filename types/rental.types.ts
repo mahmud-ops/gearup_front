@@ -1,5 +1,6 @@
 export interface RentalOrderItem {
   item: {
+    id: string;
     name: string;
     image: string;
     dailyRate: string;
